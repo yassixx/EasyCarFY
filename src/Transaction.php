@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\Helper;
 use PDOException;
 
 class Transaction {
@@ -18,7 +19,7 @@ class Transaction {
 
             return $dbconnection->lastInsertId();
         } catch (PDOException $e) {
-            echo "Erreur d'insertion dans la base de données: " . $e->getMessage();
+            Helper::logMessage("Erreur d'insertion dans la base de données: " . $e->getMessage());
             return false;
         }
     }

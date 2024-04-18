@@ -5,12 +5,7 @@ require_once "elements/header.php";
 use App\BD;
 use App\User;
 
-
-try {
-    $dbconnection = BD::getDBConnection();
-} catch (exception $e) {
-    $e->getMessage();
-}
+$dbconnection = BD::getDBConnection();
 
 $problem_password = '';
 
@@ -26,6 +21,7 @@ if (!empty($_POST)) {
 
         $status = User::createUser($nomCreation, $emailCreation, $passwordCreation);
         if ($status === 'true') {
+            $error_login = '<div class="alert alert-warning" role="alert">Merci de votre inscription, vous pouvez dès maintenant vous connecter</div>'; 
             Header("Location: /login_page.php");
             exit;
         } else {

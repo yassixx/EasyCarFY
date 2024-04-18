@@ -9,6 +9,7 @@
               EasyCar
             </text>
           </svg>
+          <h3>Achat fictif - demo - test - but non commercial</h3>
         </div>
       </h1>
       <h3 class="fw-normal text-muted mb-3 animated-text">Trouvez aujourd'hui, conduisez demain, possédez pour toujours</h3>

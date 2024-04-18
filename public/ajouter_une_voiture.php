@@ -8,17 +8,18 @@ Helper::startSession();
 ob_start();
 
 require_once "elements/header.php";
+$message = '';
 
-
-if ($_SESSION['connection'] == 'true') {
+if ($_SESSION['connection'] == 'true' && !empty($_SESSION['idProprietaire'])) {
   $nomC = $_SESSION['nom'];
   $idProprietaire = (int) $_SESSION['idProprietaire'];
-  try {
-    $dbconnection = BD::getDBConnection();
-  } catch (exception $e) {
-    $e->getMessage();
-    echo "probleme recuperation informations proprietaire";
-  };
+
+  $dbconnection = BD::getDBConnection();
+  if (!$dbconnection) {
+    $message = '<div class="alert alert-danger" role="alert">
+    Nous rencontrons des problèmes pour connecter à la base de données. Veuillez réessayer plus tard.
+    </div>';
+  }
 
   if (!empty($_POST)) {
     $carTab = [
@@ -39,16 +40,17 @@ if ($_SESSION['connection'] == 'true') {
       $idNouvelleVoiture = Vehicule::addCar($carTab);
       header("Location: /annonce_ajoutee.php?status=true&id=$idNouvelleVoiture");
       exit();
-    } catch (Exception $e) {
-      echo "Une erreur est survenue lors de l'ajout du véhicule : " . $e->getMessage();
+    } catch (PDOException $e) {
+      Helper::logMessage("Erreur lors de l'ajout d'un véhicule : " . $e->getMessage());
+      $message = '<div class="alert alert-danger" role="alert">
+      Erreur lors de l\'ajout d\'un véhicule. Veuillez réessayer plus tard.
+      </div>';
     }
   }
 } else {
-  header('Location: /login_page.php');
+  header('Location: /login_page.php?info=connection_needed');
   exit();
 }
 ob_end_flush();
-?>
-<div class="container">
-  <?php require '../templates/add_annonce_template.php'; ?>
-</div>
+
+require '../templates/add_annonce_template.php';

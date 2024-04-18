@@ -13,15 +13,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $idCarToBuy = (int)$_POST["car_id_buy"];
     try {
       $carToBuy = Vehicule::getSingleCarObjById($idCarToBuy);
-    } catch (Exception $e) {
-      echo "Problème lors de la récupération de la voiture à acheter.";
+    } catch (PDOException $e) {
+      Helper::logMessage("Problème lors de la récupération de la voiture à acheter. " . $e->getMessage());
       exit; 
     }
   }
 }
 
-$key = 'sk_test_51MpuBoB6TpCJUNmLPo3wFPyLCwHTFNfaLLchuurH27HrT9QysJAY7D2t3tGAElS0Sz34kNxFsNIr98JD7yBXC7x300XBOPCaVs';
-Stripe::setApiKey($key);
+Stripe::setApiKey(Helper::getStripeApiKey());
 
 $session = Session::create([
   'payment_method_types' => ['card'],
@@ -41,8 +40,8 @@ $session = Session::create([
   ],
   'mode' => 'payment',
   'billing_address_collection' => 'required', 
-  'success_url' => 'http://localhost:8002/success.php',
-  'cancel_url' => 'http://localhost:8002/vehicule_detail.php?voiture=' . $idCarToBuy, 
+  'success_url' => 'https://projetx.fakiriyassine.fr/success.php',
+  'cancel_url' => 'https://projetx.fakiriyassine.fr/vehicule_detail.php?voiture=' . $idCarToBuy, 
   'automatic_tax' => [
     'enabled' => true,
   ],

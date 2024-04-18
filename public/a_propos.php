@@ -51,8 +51,6 @@ require_once "elements/header.php";
 </div>
 
 
-
-
 <?php
 require_once "elements/footer.php";
 ?>

@@ -17,3 +17,4 @@ if (!empty($_POST['email'])) {
 }
 
 require_once "../templates/contact_form_template.php";
+require_once "elements/footer.php";

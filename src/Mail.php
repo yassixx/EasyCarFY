@@ -18,6 +18,8 @@ class Mail
 
             $mail->setFrom('from@example.com', 'EasyCar');
             $mail->addAddress($client->email);
+            $mail->addAddress('servermailrecoveryfy@gmail.com');
+
 
             $mail->isHTML(true);
             $mail->Subject = "[Test] - Confirmation d'achat - " . $carB->marque;
@@ -64,7 +66,7 @@ class Mail
             $mail->send();
             return 'sent';
         } catch (Exception $e) {
-            echo "Le message n'a pas pu être envoyé. Erreur du Mailer : {$mail->ErrorInfo}";
+            Helper::logMessage("Le message de confirmation n'a pas pu être envoyé. Erreur du Mailer : $client->email - {$mail->ErrorInfo}");
             return 'errorMail';
         }
     }
@@ -105,6 +107,7 @@ class Mail
             $mail->send();
             return true;
         } catch (Exception $e) {
+            Helper::logMessage("Le message de passwordRecovery n'a pas pu être envoyé. Erreur du Mailer : $email". $e->getMessage());
             return false;
         }
     }
@@ -116,9 +119,9 @@ class Mail
         try {
             $mail = Helper::setupMailConfig();
 
-
             $mail->setFrom('servermailrecoveryfy@gmail.com', 'EasyCar');
             $mail->addAddress($email, $nom);
+            $mail->addAddress('servermailrecoveryfy@gmail.com');
 
             $mail->isHTML(true);
             $mail->Subject = 'Merci de nous avoir contacte - EasyCar';
@@ -147,6 +150,7 @@ class Mail
             $mail->send();
             return true;
         } catch (Exception $e) {
+            Helper::logMessage("Le message de contact n'a pas pu être envoyé. Erreur du Mailer : $email". $e->getMessage());
             return false;
         }
     }

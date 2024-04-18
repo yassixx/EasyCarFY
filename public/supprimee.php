@@ -4,6 +4,8 @@ use App\Helper;
 use App\Vehicule;
 
 Helper::startSession();
+ob_start();
+
 require_once "elements/header.php";
 
 if (!empty($_GET) && isset($_SESSION['connection']) && $_SESSION['connection'] == 'true') {
@@ -14,22 +16,24 @@ if (!empty($_GET) && isset($_SESSION['connection']) && $_SESSION['connection'] =
   try {
     $car = Vehicule::getSingleCarObjById($id);
 
-    if ((int)$car->proprietaire_id === $idProprietaire) {
+    if ((int) $car->proprietaire_id === $idProprietaire) {
       $r = Vehicule::deleteCar($id);
       if ($r) {
-        echo "Le véhicule a été supprimé avec succès.";
+        header('Location: /dashboard.php?status=supprimee');
       } else {
-        echo "Une erreur s'est produite lors de la suppression du véhicule.";
+      header('Location: /dashboard.php?status=errorsuppression');
       }
     } else {
-      header('Location: /dashboard.php?error=not_owner');
+      header('Location: /dashboard.php?status=errorsuppression');
+
       exit();
     }
-  } catch (Exception $e) {
-    echo "Une erreur s'est produite : " . $e->getMessage();
+  } catch (PDOException $e) {
+    Helper::logMessage("Erreur lors de la suppression de la voiture $id: " . $e->getMessage());
   }
 } else {
-  header('Location: /dashboard.php?error=not_logged_in');
+  header('Location: /dashboard.php?status=errorsuppression');
   exit();
 }
+ob_end_flush();
 ?>

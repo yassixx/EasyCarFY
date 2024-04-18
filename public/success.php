@@ -40,12 +40,15 @@ try {
 
     $status = Mail::sendMail($clientBought, $carBoughtObj, $userProprioObj);
 } catch (ApiErrorException $e) {
-    echo "Une erreur est survenue lors de la récupération des informations de la session : " . $e->getMessage();
+    Helper::logMessage("Une erreur est survenue lors de la récupération des informations de la session : $session_payement_id vérifier transaction" . $e->getMessage());
 }
 
-if ($status === 'sent') : 
+if ($status === 'sent') { 
     require_once "elements/header.php";
     require_once "../templates/order_validation_template.php";
     require_once "elements/footer.php";
-endif; 
-
+}else {
+    require_once "elements/header.php";
+    echo '<div class="error">Un problème est survenu lors de l\'envoi du mail de confirmation. Veuillez nous contacter pour plus d\'assistance.</div>';
+    require_once "elements/footer.php";
+}

@@ -7,17 +7,34 @@ ob_start();
 Helper::startSession();
 
 require_once "elements/header.php";
+$ms = '';
+
+if(!empty($_GET['status'])){
+    $status = htmlentities($_GET['status']);
+    if($status === 'supprimee'){
+        $ms = '<div class="alert alert-success" role="alert">
+        Supprimée avec succès. 
+      </div>';
+    }
+    else{
+        $ms = '<div class="alert alert-danger" role="alert">
+        Problème lors de la suppression. 
+      </div>';
+    }
+} 
+
 
 if(isset($_SESSION['connection']) && $_SESSION['connection']=='true'){
     $nomC = $_SESSION['nom'];
     $idProprietaire = (int)$_SESSION['idProprietaire'];
     $dbconnection = BD::getDBConnection();
-    $cars = $dbconnection->query("SELECT * FROM voitures WHERE proprietaire_id = $idProprietaire")->fetchAll(PDO::FETCH_OBJ);
+    $cars = Vehicule::getAllCarsOfUser($idProprietaire);
 ?>
 <div class="container mt-5">
     <h1>Bienvenue <?=$nomC?> dans votre dashboard</h1>
-    <a href="/logout.php" class="btn btn-dark my-1">Se deconnecter</a>
+    <a href="/logout.php" class="btn btn-danger my-1">Se deconnecter</a>
     <a href="/ajouter_une_voiture.php" class="btn btn-dark my-2">Publier votre annonce</a>
+    <?= $ms ?>
 
     <div class="album py-5 bg-body-tertiary">
     <div class="container">

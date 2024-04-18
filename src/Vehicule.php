@@ -70,8 +70,8 @@ class Vehicule
                 return false; 
             }
         } catch (PDOException $e) {
+            Helper::logMessage("Erreur lors deu retour de l'objet vehicule a modifier: " . $e->getMessage());
 
-            throw $e;
         }
     }
 
@@ -101,6 +101,8 @@ class Vehicule
                 return false;
             }
         } catch (PDOException $e) {
+            
+            Helper::logMessage("Erreur lors de l'ajout PDO d'un véhicule : " . $e->getMessage());
             return false;
         }
     }
@@ -120,6 +122,8 @@ class Vehicule
                 return false;
             }
         } catch (PDOException $e) {
+            Helper::logMessage("Erreur lors de la suppression $carId PDO d'un véhicule : " . $e->getMessage());
+
             return false;
         }
     }
@@ -149,6 +153,8 @@ class Vehicule
                 return false;
             }
         } catch (PDOException $e) {
+            Helper::logMessage("Erreur lors de la modification PDO d'un véhicule : " . $e->getMessage());
+
             return false;
         }
     }
@@ -164,7 +170,18 @@ class Vehicule
             $dbconnection = BD::getDBConnection();
             return $dbconnection->query('SELECT * FROM voitures')->fetchAll(PDO::FETCH_OBJ);
         } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération des voitures : " . $e->getMessage());
+            Helper::logMessage("Erreur lors de la récupération des voitures : " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public static function getAllCarsOfUser($idPro): array
+    {
+        try {
+            $dbconnection = BD::getDBConnection();
+            return $dbconnection->query("SELECT * FROM voitures WHERE proprietaire_id = $idPro")->fetchAll(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            Helper::logMessage("Erreur lors de la récupération des voitures de l'utilisateur $idPro: " . $e->getMessage());
             return [];
         }
     }
@@ -187,7 +204,7 @@ class Vehicule
 
             return $dbconnection->query($query)->fetchAll(PDO::FETCH_OBJ);
         } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération des voitures : " . $e->getMessage());
+            Helper::logMessage("Erreur lors du tri des voitures $sort $order: " . $e->getMessage());
             return []; 
         }
     }
@@ -209,7 +226,7 @@ class Vehicule
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_OBJ);
         } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération des voitures : " . $e->getMessage());
+            Helper::logMessage("Erreur lors de la recherche des voitures par marque $marque : " . $e->getMessage());
             return []; 
         }
     }
@@ -229,7 +246,7 @@ class Vehicule
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_OBJ);
         } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération des voitures : " . $e->getMessage());
+            Helper::logMessage("Erreur lors de la recherche des voitures selon champ $searchTerm : " . $e->getMessage());
             return []; 
         }
     }
@@ -272,7 +289,7 @@ class Vehicule
                 return null; 
             }
         } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération du véhicule avec l'identifiant $id : " . $e->getMessage());
+            Helper::logMessage("Erreur lors de la récupération du véhicule avec l'identifiant $id : " . $e->getMessage());
             return null; 
         }
     }
@@ -355,13 +372,13 @@ HTML;
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
                             <button type="button" class="btn btn-sm btn-outline-secondary btn-block">
-                                <a class="nav-link" href="vehicule_detail.php?voiture={$this->id}">Détails</a>
+                                <a class="nav-link" href="vehicule_detail.php?voiture={$this->id}">Voir</a>
                             </button>
                             <button type="button" class="btn btn-sm btn-dark">
-                              <a class="nav-link" href="edit.php?id={$this->id}">Modifier</a>
+                              <a class="nav-link" href="edit.php?id={$this->id}">Modif</a>
                           </button>
                           <button type="button" class="btn btn-sm btn-danger">
-                              <a class="nav-link" href="/supprimee.php?id={$this->id}">Supprimer</a>
+                              <a class="nav-link" href="/supprimee.php?id={$this->id}">Suppr</a>
                           </button>
                         </div>
                     </div>
@@ -422,6 +439,8 @@ HTML;
                   <form method="post" action="/checkout.php">
                       <input type="hidden" name="car_id_buy" value="{$singleCar->id}">
                       <button type="submit" class="btn btn-primary mt-3">Acheter</button>
+                      <h4><strong>Achat fictif - demo - test - but non commercial</strong></h4>
+                      <p>Pour tester utiliser cartes fictives de test disponibles sur stripe</p>
                   </form>
               </div>
           </div>

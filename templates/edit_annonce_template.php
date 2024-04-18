@@ -51,9 +51,9 @@
       </div>
 
       <div class="form-group row mt-3">
-                    <label for="carburant_add" class="col-4 col-form-label">Carburant :</label>
+                    <label for="carburant_mod" class="col-4 col-form-label">Carburant :</label>
                     <div class="col-8">
-                        <select id="carburant_add" name="carburant_add" class="form-control">
+                        <select id="carburant_mod" name="carburant_mod" class="form-control">
                             <option value="<?= $car->carburant ?>"><?= $car->carburant ?></option>
                             <option value="essence">Essence</option>
                             <option value="diesel">Diesel</option>

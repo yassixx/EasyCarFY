@@ -36,7 +36,7 @@ class Client {
         $this->id = $dbconnection->lastInsertId();
         return $dbconnection->lastInsertId();
     } catch(PDOException $e) {
-        echo "Erreur d'insertion dans la base de données: " . $e->getMessage();
+        Helper::logMessage("Erreur d'insertion dans la base de données:". $e->getMessage());
         return false;
     }
     }

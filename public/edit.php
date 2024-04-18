@@ -6,7 +6,7 @@ use App\Vehicule;
 Helper::startSession();
 ob_start();
 require_once "elements/header.php";
-
+$message = '';
 
 if (!empty($_GET) && isset($_SESSION['connection']) && $_SESSION['connection'] == 'true') {
   $id = (int) $_GET['id'];
@@ -31,14 +31,17 @@ if (!empty($_GET) && isset($_SESSION['connection']) && $_SESSION['connection'] =
       'prix_mod' => $_POST['prix_mod'],
       'photo_mod' => $_POST['photo_mod'],
       'id' => $id
-    ];
-
+    ]; ?>
+    <?= $message ? $message : '';?>
+    <?php
     try {
       $status = Vehicule::CarEditUpdate($carTab);
       header("Location: /annonce_modifiee.php?status=true&id=$id");
       exit();
     } catch (Exception $e) {
-      echo "Une erreur est survenue lors de la modification du véhicule : " . $e->getMessage();
+      Helper::logMessage("Error lors de la suppression du vehicule $id par le proprietaire $idProprietaire" . $e->getMessage());
+
+      $message = '<div class="alert alert-danger" role="alert">Une erreur est survenue lors de la modification du véhicule</div>';
     }
   }
   ob_end_flush();
