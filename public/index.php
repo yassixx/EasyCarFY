@@ -14,7 +14,7 @@ if (!empty($_GET['info']) && $_GET['info'] === 'recap_problem') {
 ';
 }
 
-if (!empty($_GET['sort'])) {
+if (!empty($_GET['sort']) || !empty($_GET['filter_marque']) || !empty($_GET['q'])) {
   if (!empty($_GET['sort']) && !empty($_GET['order'])) {
     $sort = htmlentities($_GET['sort']);
     $order = htmlentities($_GET['order']);
